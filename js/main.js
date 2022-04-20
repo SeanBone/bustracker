@@ -1,11 +1,3 @@
-
-/** TODO:
- * [ ] Mobile test
- * [ ] Safari test
- * [ ] GPS test on https site
- * [x] GPS tracking
- */
-
 $(document).ready(function() {
 	if (!localStorage) {
 		return;
@@ -16,20 +8,23 @@ $(document).ready(function() {
 	
 	// Show main app
 	$("#app").show();
-	
+
+	// Pre-fill the line name text field from local storage
+	lineName = localStorage.getItem("lineName");
+	if (lineName === null) {
+		lineName = "";
+	}
+	$("input#line").val(lineName);
+
+	// Listen for changes in the line name field & update stored value
+	$("input#line").change(function(event) {
+		localStorage.setItem("lineName", $("input#line").val());
+	});
+
 	// Get GPS coordinates
 	window.gpsCoords = {"lat": null, "long": null, "acc": null};
 	if (navigator.geolocation) {
 		navigator.geolocation.watchPosition(onGPSUpdate, onGPSError);
-		// onGPSUpdate({ "coords": {
-		//     "latitude": 47.1234,
-		//     "longitude": 8.345,
-		//     "accuracy": 50
-		// }});
-
-		// setTimeout(function() {
-		//     navigator.geolocation.watchPosition(onGPSUpdate, onGPSError);
-		// }, 5000);
 	}
 	
 	// Initial update of the downloads list
@@ -53,18 +48,20 @@ $(document).ready(function() {
 	$(".eventbutton").click(function(event) {
 		event.preventDefault();
 		eventSlug = slugify(event.target.innerHTML);
+
 		lineName = $("input#line").val();
 		lineSlug = slugify(lineName);
+
 		commentField = $("textarea#comment");
 		comment = commentField.val();
+		commentField.val("");
 	
 		eventLog = retrieveStoredData();
-		
 		if (!(lineSlug in eventLog)) {
 			eventLog[lineSlug] = {"lineName": lineName, "rows": []};
 		}
 	
-		dateTime = getCurrentTime();
+		dateTime = getDateAndTime();
 		entry = {
 			"eventType": eventSlug,
 			"comment": comment,
@@ -77,10 +74,7 @@ $(document).ready(function() {
 		eventLog[lineSlug].rows.push(entry);
 	
 		storeData(eventLog);
-	
 		updateDownloadsList();
-	
-		commentField.val("");
 	
 		$("div#success").show();
 		$("div#success").delay(5000).fadeOut();
@@ -164,14 +158,14 @@ function storeData(data) {
 /**
  * Get current date and time as formatted strings.
  */
-function getCurrentTime() {
-	function padZero(i) {
+function getDateAndTime() {
+	function pad(i) {
 		if (i < 10) {i = "0" + i}
 		return i;
 	}
 	dateTime = new Date();
-	cDate = dateTime.getFullYear() + '-' + padZero(dateTime.getMonth() + 1) + '-' + padZero(dateTime.getDate());
-	cTime = padZero(dateTime.getHours()) + ":" + padZero(dateTime.getMinutes()) + ":" + padZero(dateTime.getSeconds());
+	cDate = dateTime.getFullYear()+'-'+pad(dateTime.getMonth()+1)+'-'+pad(dateTime.getDate());
+	cTime = pad(dateTime.getHours())+":"+pad(dateTime.getMinutes())+":"+pad(dateTime.getSeconds());
 	return {"time": cTime, "date": cDate};
 }
 
