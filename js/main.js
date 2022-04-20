@@ -7,6 +7,10 @@
  */
 
 $(document).ready(function() {
+	if (!localStorage) {
+		return;
+	}
+
 	// Hide the error message
 	$("#unsopported").hide();
 	
