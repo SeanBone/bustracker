@@ -1,3 +1,14 @@
+
+* {
+	/* Force the browser to subtract the padding
+	 * from the width of the element, instead of increasing the size.
+	 */
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
+}
+
+
 :root {
 	--my-blue: #222D8F;
 	--my-orange: #DB4B12;
@@ -26,9 +37,10 @@ div#main {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 	/* height: 100%; */
 	/* width: 100%; */
-	max-width: 50em;
+	max-width: 65em;
 	padding: 0em;
 }
 
@@ -36,10 +48,16 @@ div#main {
 
 
 
-
-
 div#main div {
 	padding: 2em;
+	width: 100%;
+	max-width: 100%;
+}
+
+
+div#main div#form {
+	max-width: 50em;
+	/* border: 1px solid black; */
 }
 
 input, textarea {
@@ -64,6 +82,24 @@ a {
 	padding: 0.5em;
 }
 
+a.grey {
+	background-color: #aaa;
+	color: black;
+}
+
+a.darkgrey {
+	background-color: #666;
+}
+
+a.purple {
+	background-color: #aa22aa;
+}
+
+a.yellow {
+	background-color: #bbbb22;
+	color: black;
+}
+
 a:hover, a:active {
 	background-color: var(--my-green);
 }
@@ -82,7 +118,6 @@ a.deletebutton:hover {
 
 
 
-
 div#buttons {
 	display: flex;
 	flex-direction: row;
@@ -94,9 +129,13 @@ div#buttons {
 div#buttons a.eventbutton {
 	padding: 1em;
 	min-width: 10em;
-	width: 30%;
+	width: 20%;
 	flex-grow: 1;
 	margin: 0.5em;
+}
+
+div#buttons a.eventbutton.fullsize {
+	width: 100%;
 }
 
 
@@ -121,7 +160,7 @@ div#success {
 
 div#main div#geolocation {
 	/* border: 1px solid black; */
-	padding: 0.2em;
+	padding: 0.4em;
 	/* display: inline; */
 	/* position: absolute; */
 	/* top: 0; */

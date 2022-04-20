@@ -35,19 +35,6 @@ $(document).ready(function() {
 	// Initial update of the downloads list
 	updateDownloadsList();
 	
-	// Create the event buttons
-	populateEventButtons([
-		"Inizio corsa",
-		"Apertura porte",
-		"Chiusura porte",
-		"Immissione in corsia",
-		"Semaforo: arresto",
-		"Semaforo: partenza",
-		"Precedenza: arresto",
-		"Precedenza: partenza",
-		"Fine corsa",
-	]);
-	
 	// Add behaviour of delete button
 	$("a.deletebutton").click(function(event) {
 		event.preventDefault();
@@ -65,7 +52,7 @@ $(document).ready(function() {
 	// Handle a click on one of the event buttons
 	$(".eventbutton").click(function(event) {
 		event.preventDefault();
-		eventName = event.target.id;
+		eventSlug = slugify(event.target.innerHTML);
 		lineName = $("input#line").val();
 		lineSlug = slugify(lineName);
 		commentField = $("textarea#comment");
@@ -79,7 +66,7 @@ $(document).ready(function() {
 	
 		dateTime = getCurrentTime();
 		entry = {
-			"eventType": eventName,
+			"eventType": eventSlug,
 			"comment": comment,
 			"date": dateTime.date,
 			"time": dateTime.time,
@@ -256,16 +243,3 @@ function genCSV(lineSlug) {
 	return csv;
 }
 
-/**
- * Given a list of event names, generate the buttons for them.
- */
-function populateEventButtons(eventList) {
-	div = $("div#buttons");
-	div.html("");
-	for (let e in eventList) {
-		let eventName = eventList[e];
-		let eventSlug = slugify(eventName);
-		let html = '<a href="#" class="eventbutton" id="'+eventSlug+'">'+eventName+'</a>';
-		div.html(div.html() + html);
-	}
-}
