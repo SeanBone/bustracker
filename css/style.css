@@ -1,0 +1,123 @@
+:root {
+	--my-blue: #222D8F;
+	--my-orange: #DB4B12;
+	--my-green: #578F36;
+	--my-lightgreen: #93FF61;
+	/* --my-lightgreen: #76CC4E; */
+	--my-successgreen: #4BB543;
+	--my-successlightgreen: #AEDF8D;
+	--my-red: #DB0106;
+}
+
+body {
+	background-color: #eee;
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+}
+
+div#app {
+	display: none;
+}
+
+div#main {
+	background-color: #fff;
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	/* height: 100%; */
+	/* width: 100%; */
+	max-width: 50em;
+	padding: 0em;
+}
+
+
+
+
+
+
+
+div#main div {
+	padding: 2em;
+}
+
+input, textarea {
+	display: block;
+	width: 100%;
+}
+
+
+
+ul#downloads-list {
+	list-style-type: none;
+}
+
+ul#downloads-list li {
+	padding: 0.6em;
+}
+
+a {
+	background-color: var(--my-blue);
+	color: #eee;
+	text-decoration: none;
+	padding: 0.5em;
+}
+
+a:active {
+	background-color: var(--my-orange);
+}
+
+a:hover {
+	background-color: var(--my-green);
+}
+
+a.deletebutton {
+	background-color: var(--my-red);
+}
+
+a.deletebutton:hover {
+	background-color: var(--my-orange);
+}
+
+
+
+
+
+
+
+
+div#buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	flex-wrap: wrap;
+	padding: 0 2em 2em 2em;
+}
+
+div#buttons a.eventbutton {
+	padding: 1em;
+	min-width: 10em;
+	width: 30%;
+	flex-grow: 1;
+	margin: 0.5em;
+}
+
+
+
+
+
+
+div#success {
+	background-color: var(--my-successlightgreen);
+	/* border: 2px solid var(--my-successlightgreen); */
+	color: var(--my-successgreen);
+	/* font-weight: bold; */
+	padding: 1em;
+	position: fixed;
+	top: 1em;
+	right: 1em;
+    /* left: 25%; */
+    /* transform: translateX(-50%); */
+	display: none;
+}

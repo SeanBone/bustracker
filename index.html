@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<title>Bustracker</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="description" content="" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+
+<body>
+	<div id="unsopported">
+		<h1>Errore: l'applicazione non è supportata su questo dispositivo.</h1>
+	</div>
+	<div id="app">
+		<div id="main">
+			<div id="form">
+				<label for="linea">Linea: </label>
+				<input type="text" id="line" name="line">
+				<br>
+				<label for="commento">Commento:</label>
+				<textarea id="comment" name="comment"></textarea>
+			</div>
+			<div id="buttons">
+				<a href="#" class="eventbutton" id="partenza">Partenza</a>
+			</div>
+			<div id="downloads">
+				<h3>Download dati</h3>
+				<ul id="downloads-list">
+
+				</ul>
+			</div>
+			<div id="delete">
+				<a href="#" class="deletebutton">Elimina dati salvati</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="success">
+		Evento salvato con successo.
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
