@@ -64,11 +64,7 @@ a {
 	padding: 0.5em;
 }
 
-a:active {
-	background-color: var(--my-orange);
-}
-
-a:hover {
+a:hover, a:active {
 	background-color: var(--my-green);
 }
 
@@ -121,3 +117,24 @@ div#success {
     /* transform: translateX(-50%); */
 	display: none;
 }
+
+
+div#main div#geolocation {
+	/* border: 1px solid black; */
+	padding: 0.2em;
+	/* display: inline; */
+	/* position: absolute; */
+	/* top: 0; */
+	/* right: 0; */
+}
+
+div#main div#geolocation.gps-success {
+	background-color: var(--my-successlightgreen);
+	color: var(--my-green);
+}
+
+div#main div#geolocation.gps-fail {
+	background-color: var(--my-red);
+	color: #550000;
+}
+

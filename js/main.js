@@ -1,87 +1,154 @@
 
 /** TODO:
- * [x] Option to download stored data as CSV
- * [x] Mobile test
+ * [ ] Mobile test
  * [ ] Safari test
- * [x] Chrome test
- * [x] JS to generate event list
- * [x] Feedback on successfully saved event
- * [ ] GPS tracking
+ * [ ] GPS test on https site
+ * [x] GPS tracking
  */
 
-// Hide the error message
-$("#unsopported").hide();
-
-// Show main app
-$("#app").show();
-
-// Initial update of the downloads list
-updateDownloadsList();
-
-// Create the event buttons
-populateEventButtons([
-	"Inizio corsa",
-	"Apertura porte",
-	"Chiusura porte",
-	"Immissione in corsia",
-	"Semaforo: arresto",
-	"Semaforo: partenza",
-	"Precedenza: arresto",
-	"Precedenza: partenza",
-	"Fine corsa",
-]);
-
-// Add behaviour of delete button
-$("a.deletebutton").click(function(event) {
-	event.preventDefault();
-	if (confirm("Tutti i dati verranno eliminati permanentemente. Procedere?")) {
-		localStorage.removeItem("storedEvents");
-		updateDownloadsList();
-	}
-});
-
-// Hide the success box when it's clicked
-$("div#success").click(function(event) {
-	$("div#success").hide();
-});
-
-// Handle a click on one of the event buttons
-$(".eventbutton").click(function(event) {
-	event.preventDefault();
-	eventName = event.target.id;
-	lineName = $("input#line").val();
-	lineSlug = slugify(lineName);
-	commentField = $("textarea#comment");
-	comment = commentField.val();
-
-	eventLog = retrieveStoredData();
+$(document).ready(function() {
+	// Hide the error message
+	$("#unsopported").hide();
 	
-	if (!(lineSlug in eventLog)) {
-		eventLog[lineSlug] = {"lineName": lineName, "rows": []};
+	// Show main app
+	$("#app").show();
+	
+	// Get GPS coordinates
+	window.gpsCoords = {"lat": null, "long": null, "acc": null};
+	if (navigator.geolocation) {
+		navigator.geolocation.watchPosition(onGPSUpdate, onGPSError);
+		// onGPSUpdate({ "coords": {
+		//     "latitude": 47.1234,
+		//     "longitude": 8.345,
+		//     "accuracy": 50
+		// }});
+
+		// setTimeout(function() {
+		//     navigator.geolocation.watchPosition(onGPSUpdate, onGPSError);
+		// }, 5000);
 	}
-
-	dateTime = getCurrentTime();
-	entry = {
-		"eventType": eventName,
-		"comment": comment,
-		"date": dateTime.date,
-		"time": dateTime.time
-	};
-	eventLog[lineSlug].rows.push(entry);
-
-	storeData(eventLog);
-
+	
+	// Initial update of the downloads list
 	updateDownloadsList();
-
-	commentField.val("");
-
-	$("div#success").show();
-	$("div#success").delay(5000).fadeOut();
+	
+	// Create the event buttons
+	populateEventButtons([
+		"Inizio corsa",
+		"Apertura porte",
+		"Chiusura porte",
+		"Immissione in corsia",
+		"Semaforo: arresto",
+		"Semaforo: partenza",
+		"Precedenza: arresto",
+		"Precedenza: partenza",
+		"Fine corsa",
+	]);
+	
+	// Add behaviour of delete button
+	$("a.deletebutton").click(function(event) {
+		event.preventDefault();
+		if (confirm("Tutti i dati verranno eliminati permanentemente. Procedere?")) {
+			localStorage.removeItem("storedEvents");
+			updateDownloadsList();
+		}
+	});
+	
+	// Hide the success box when it's clicked
+	$("div#success").click(function(event) {
+		$("div#success").hide();
+	});
+	
+	// Handle a click on one of the event buttons
+	$(".eventbutton").click(function(event) {
+		event.preventDefault();
+		eventName = event.target.id;
+		lineName = $("input#line").val();
+		lineSlug = slugify(lineName);
+		commentField = $("textarea#comment");
+		comment = commentField.val();
+	
+		eventLog = retrieveStoredData();
+		
+		if (!(lineSlug in eventLog)) {
+			eventLog[lineSlug] = {"lineName": lineName, "rows": []};
+		}
+	
+		dateTime = getCurrentTime();
+		entry = {
+			"eventType": eventName,
+			"comment": comment,
+			"date": dateTime.date,
+			"time": dateTime.time,
+			"lat": window.gpsCoords.lat,
+			"long": window.gpsCoords.long,
+			"acc": window.gpsCoords.acc
+		};
+		eventLog[lineSlug].rows.push(entry);
+	
+		storeData(eventLog);
+	
+		updateDownloadsList();
+	
+		commentField.val("");
+	
+		$("div#success").show();
+		$("div#success").delay(5000).fadeOut();
+	});
 });
 
 
 
+/**
+* Handle GPS position update.
+*/
+function onGPSUpdate(pos) {
+	let x = $("div#geolocation");
+	x.addClass("gps-success");
+	x.removeClass("gps-fail");
 
+	x.html(
+		"Lat: " + pos.coords.latitude
+		+"; Long: " + pos.coords.longitude
+		+"; Acc: " + pos.coords.accuracy
+	);
+
+	window.gpsCoords = {
+		"lat": pos.coords.latitude,
+		"long": pos.coords.longitude,
+		"acc": pos.coords.accuracy
+	};
+}
+
+
+/**
+* Handle GPS position error.
+*/
+function onGPSError(error) {
+	let x = $("div#geolocation");
+	x.html("GPS offline ");
+	x.removeClass("gps-success");
+	x.addClass("gps-fail");
+	switch(error.code) {
+		case error.PERMISSION_DENIED:
+			x.html(x.html()+"(accesso negato)");
+			break;
+		case error.POSITION_UNAVAILABLE:
+			x.html(x.html()+"(posizione non disponibile)");
+			break;
+		case error.TIMEOUT:
+			x.html(x.html()+"(timeout richiesta)");
+			break;
+		case error.UNKNOWN_ERROR:
+			x.html(x.html()+"(errore sconosciuto)");
+			break;
+	}
+
+	window.gpsCoords = {
+		"lat": null,
+		"long": null,
+		"acc": null
+	};
+}
 
 /**
  * Retrieve our data structure from local storage.
@@ -174,11 +241,12 @@ function genCSV(lineSlug) {
 
 	lineName = eventLog[lineSlug].lineName;
 	csv = "Linea:,\"" + stripQuotes(lineName) + "\"\n";
-	csv += "\nEvento,Data,Ora,Commento\n";
+	csv += "\nEvento,Data,Ora,Latitudine,Longitudine,Accuratezza,Commento\n";
 
 	for (rowIdx in eventLog[lineSlug].rows) {
 		let row = eventLog[lineSlug].rows[rowIdx];
 		csv += row.eventType + "," + row.date + "," + row.time;
+		csv += "," + row.lat + "," + row.long + "," + row.acc;
 		csv += ",\"" + stripQuotes(row.comment) + "\"\n";
 	}
 	return csv;
