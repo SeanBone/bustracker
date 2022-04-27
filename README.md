@@ -4,6 +4,7 @@ Lightweight web app to log events during a bus ride. This information is useful 
  - Input a bus line name or number (or don't).
  - When clicking one of the coloured buttons, the corresponding event is registered with a time stamp and GPS coordinates.
  - Any text in the comment field will be attached to the next logged event.
+ - All data is stored locally on the browser, so the app will work even if the internet connection is lost.
  - You can download the logged data as a CSV file for analysis.
 
 This app was developed as a commission for the civil engineering company [Comal](https://www.comal.ch/).
