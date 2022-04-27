@@ -92,11 +92,11 @@ a.darkgrey {
 }
 
 a.purple {
-	background-color: #aa22aa;
+	background-color: #820c16;
 }
 
 a.yellow {
-	background-color: #bbbb22;
+	background-color: #d18c2c;
 	color: black;
 }
 
@@ -177,3 +177,21 @@ div#main div#geolocation.gps-fail {
 	color: #550000;
 }
 
+
+div#main div#credits {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-align: center;
+}
+
+div#main div#credits a {
+	padding: 0;
+	background-color: transparent;
+	color: #555;
+	text-decoration: underline;
+}
+
+div#main div#credits a:hover {
+	text-decoration: none;
+	color: #999;
+}
